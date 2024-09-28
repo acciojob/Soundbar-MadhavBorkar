@@ -1,38 +1,35 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const sounds = ['sound1', 'sound2', 'sound3']; // List your sound files without extension
-    const buttonsContainer = document.getElementById('buttons');
+// Get all buttons with the class 'btn'
+const buttons = document.querySelectorAll('.btn');
+const stopButton = document.querySelector('.stop');
 
-    let currentAudio = null;
+// Array to store the current playing audio elements
+let audioElements = [];
 
-    sounds.forEach(sound => {
-        const btn = document.createElement('button');
-        btn.className = 'btn';
-        btn.textContent = sound;
-        btn.addEventListener('click', () => {
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-                if (currentAudio.src.includes(sound)) {
-                    currentAudio = null;
-                    return;
-                }
-            }
-            currentAudio = new Audio(`sounds/${sound}.mp3`);
-            currentAudio.play();
-        });
-        buttonsContainer.appendChild(btn);
+// Add event listener to each button to play the corresponding sound
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        const soundName = button.getAttribute('data-sound');
+        playSound(soundName);
     });
-
-    const stopBtn = document.createElement('button');
-    stopBtn.className = 'stop';
-    stopBtn.textContent = 'Stop';
-    stopBtn.addEventListener('click', () => {
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
-            currentAudio = null;
-        }
-    });
-
-    buttonsContainer.appendChild(stopBtn);
 });
+
+// Function to play a sound
+function playSound(soundName) {
+    const audio = new Audio(`./sounds/${soundName}.mp3`);
+    
+    // Stop all currently playing sounds
+    stopAllSounds();
+
+    // Add the new audio to the array and play it
+    audioElements.push(audio);
+    audio.play();
+}
+
+// Function to stop all currently playing sounds
+function stopAllSounds() {
+    audioElements.forEach(audio => audio.pause());
+    audioElements = []; // Clear the array
+}
+
+// Add event listener to the stop button
+stopButton.addEventListener('click', stopAllSounds);
