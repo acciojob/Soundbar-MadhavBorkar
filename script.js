@@ -1,3 +1,4 @@
+//your JS code here. If required.
 const buttons = document.querySelectorAll(".btn");
 const stopBtn = document.querySelector(".stop");
 const audios = document.querySelectorAll("audio");
@@ -7,11 +8,13 @@ buttons.forEach((btn, index) => {
     audios.forEach(audio => {
       audio.pause();
       audio.currentTime = 0;
-      audio.dataset.playing = "false";
     });
 
     const audio = audios[index];
-    audio.dataset.playing = "true";
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
   });
 });
 
@@ -19,6 +22,5 @@ stopBtn.addEventListener("click", () => {
   audios.forEach(audio => {
     audio.pause();
     audio.currentTime = 0;
-    audio.dataset.playing = "false";
   });
 });
